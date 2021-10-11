@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#SBATCH -J longranger
+#SBATCH -o ../stdout/longranger.%j.out
+#SBATCH -e ../stderr/longranger.%j.err
+#SBATCH -D ../Elephant_project/TSW/genomic_data/10x/trimmed
+
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=..@..
+
+#SBATCH --partition=begendiv,main
+#SBATCH --qos=standard
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=32G
+#SBATCH --time=48:00:00
+
+export PATH=../Software/longranger-2.2.2/:$PATH
+
+longranger basic --id=3884 --fastqs=../Elephant_project/TSW/genomic_data/10x --localcores 16
