@@ -3,7 +3,6 @@
 #SBATCH -J fastqc
 #SBATCH -o ../stdout/fastqc.%j.out
 #SBATCH -e ../stderr/fastqc.%j.err
-##SBATCH -D
 
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=..@..
