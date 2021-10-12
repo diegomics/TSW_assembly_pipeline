@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#SBATCH -J supernova
+#SBATCH -o ../stdout/supernova.%j.out
+#SBATCH -e ../stderr/supernova.%j.err
+#SBATCH -D ../Elephant_project/TSW/intermediates/Supernova
+
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=..@..
+
+#SBATCH --partition=begendiv,main
+#SBATCH --qos=standard
+#SBATCH --cpus-per-task=32
+#SBATCH --mem=512G
+#SBATCH --time=180:00:00
+
+export PATH=../Software/supernova-2.1.1/:$PATH
+
+supernova run --id=3884 --fastqs=../Elephant_project/TSW/genomic_data/10x --maxreads='all'
