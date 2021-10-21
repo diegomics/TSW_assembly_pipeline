@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#SBATCH -J meryl
+#SBATCH -o ../stdout/meryl.%j.out
+#SBATCH -e ../stderr/meryl.%j.err
+
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=ddepanis@zedat.fu-berlin.de
+
+#SBATCH --partition=begendiv,main
+##SBATCH -w b004
+#SBATCH --qos=standard
+#SBATCH --cpus-per-task=32
+#SBATCH --mem=32G
+#SBATCH --time=24:00:00
+
+export PATH=../Software/anaconda3/bin:$PATH
+source activate MERQURY_env
+
+
+# for paired reads (if 10x, shoud be already barcode-trimmed)
+
+## Only change this: ###############################################
+FQ_DIR="../Elephant_project/TSW/intermediates/trimming"
+OUT_DIR="../Elephant_project/TSW/evaluation/meryl"
+GENOMESCOPE_OUT_DIR="../Elephant_project/TSW/evaluation/genomescope"
+####################################################################
+
+
+# build meryl database for each file
+mkdir -p $OUT_DIR
+
+for i in $(ls $FQ_DIR/*.fastq.gz)
+do
+        NAME=$(basename $i .fastq.gz)
+        meryl k=21 memory=32 threads=32 count $i output $OUT_DIR/$OUT_NAME\.meryl
+done
+
+# merge all databases
+meryl k=21 memory=32 threads=32 union-sum output $OUT_DIR/3884.meryl $OUT_DIR/$OUT_NAME\*.meryl
+
+# get histogram for genomescope
+meryl histogram $OUT_DIR/3884.meryl | sed -e 's/\t/ /g' > $OUT_DIR/3884.hist
+
+# run genomescope
+mkdir -p $GENOMESCOPE_OUT_DIR
+Rscript ../Software/genomescope/genomescope.R $OUT_DIR/3884.hist 21 139 $GENOMESCOPE_OUT_DIR
