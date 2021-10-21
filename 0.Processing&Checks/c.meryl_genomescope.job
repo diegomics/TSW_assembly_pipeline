@@ -52,4 +52,4 @@ meryl histogram $OUT_DIR/3884.meryl | sed 's/\t/ /g' > $OUT_DIR/3884.hist
 
 # run genomescope
 mkdir -p $GENOMESCOPE_OUT_DIR
-Rscript $GENOMESCOPE2 -i $OUT_DIR/3884.genomescope.hist -o $GENOMESCOPE_OUT_DIR -k 21 --fitted_hist
+Rscript $GENOMESCOPE2 -i $OUT_DIR/3884.hist -o $GENOMESCOPE_OUT_DIR -k 21 --fitted_hist
