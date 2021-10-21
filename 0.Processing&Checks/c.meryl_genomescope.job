@@ -40,7 +40,7 @@ done
 meryl k=21 memory=32 threads=32 union-sum output $OUT_DIR/3884.meryl $OUT_DIR/$OUT_NAME\*.meryl
 
 # get histogram for genomescope
-meryl histogram $OUT_DIR/3884.meryl | sed -e 's/\t/ /g' > $OUT_DIR/3884.hist
+meryl histogram $OUT_DIR/3884.meryl | sed 's/\t/ /g' > $OUT_DIR/3884.hist
 
 # run genomescope
 mkdir -p $GENOMESCOPE_OUT_DIR
