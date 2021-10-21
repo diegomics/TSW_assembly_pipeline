@@ -11,7 +11,7 @@
 #SBATCH --qos=standard
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=4G
-#SBATCH --time=4:00:00
+#SBATCH --time=24:00:00
 
 module load Trimmomatic/0.39-Java-11
 module load Trim_Galore/0.6.6-GCCcore-9.3.0-Python-3.8.2
