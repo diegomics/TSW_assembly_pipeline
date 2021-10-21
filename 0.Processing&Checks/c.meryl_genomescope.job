@@ -1,11 +1,15 @@
 #!/bin/bash
 
+## Full installation ######################################################
+##conda create -n MERQURY_env -c conda-forge -c bioconda merqury openjdk=11
+###########################################################################
+
 #SBATCH -J meryl
 #SBATCH -o ../stdout/meryl.%j.out
 #SBATCH -e ../stderr/meryl.%j.err
 
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=ddepanis@zedat.fu-berlin.de
+#SBATCH --mail-user=..@..
 
 #SBATCH --partition=begendiv,main
 ##SBATCH -w b004
@@ -16,6 +20,10 @@
 
 export PATH=../Software/anaconda3/bin:$PATH
 source activate MERQURY_env
+
+GENOMESCOPE2="../Software/genomescope2.0/genomescope.R"
+
+
 
 
 # for paired reads (if 10x, shoud be already barcode-trimmed)
@@ -44,4 +52,4 @@ meryl histogram $OUT_DIR/3884.meryl | sed 's/\t/ /g' > $OUT_DIR/3884.hist
 
 # run genomescope
 mkdir -p $GENOMESCOPE_OUT_DIR
-Rscript ../Software/genomescope/genomescope.R $OUT_DIR/3884.hist 21 139 $GENOMESCOPE_OUT_DIR
+Rscript $GENOMESCOPE2 -i $OUT_DIR/3884.genomescope.hist -o $GENOMESCOPE_OUT_DIR -k 21 --fitted_hist
