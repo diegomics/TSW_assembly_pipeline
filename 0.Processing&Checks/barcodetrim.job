@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#SBATCH -J trimm
+#SBATCH -o ../stdout/trimm.%j.out
+#SBATCH -e ../stderr/trimm.%j.err
+
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=..@..
+
+#SBATCH --partition=begendiv,main
+#SBATCH --qos=standard
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=4G
+#SBATCH --time=4:00:00
+
+module load Trimmomatic/0.39-Java-11
+module load Trim_Galore/0.6.6-GCCcore-9.3.0-Python-3.8.2
+
+## Only change this: #######################################################
+FASTQ_DIR="../Elephant_project/TSW/genomic_data/10x"
+OUT_DIR="../Elephant_project/TSW/intermediates/trimming"
+############################################################################
+
+mkdir -p $OUT_DIR/temp
+
+for i in $(ls $FASTQ_DIR/*R1*)
+do
+        NAME=$(basename $i R1_001.fastq.gz)
+        java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.39.jar SE -threads 16 $i $OUT_DIR/temp/$NAME\R1_001.NObarcode.fastq.gz HEADCROP:23
+        trim_galore -o $OUT_DIR --paired -j 16 $OUT_DIR/temp/$NAME\R1_001.NObarcode.fastq.gz $FASTQ_DIR/$NAME\R2_001.fastq.gz
+done
