@@ -38,14 +38,14 @@ GENOMESCOPE_OUT_DIR="../Elephant_project/TSW/evaluation/genomescope"
 # build meryl database for each file
 mkdir -p $OUT_DIR
 
-for i in $(ls $FQ_DIR/*.fastq.gz)
+for i in $(ls $FQ_DIR/*.fq.gz)
 do
-        NAME=$(basename $i .fastq.gz)
-        meryl k=21 memory=32 threads=32 count $i output $OUT_DIR/$OUT_NAME\.meryl
+        NAME=$(basename $i .fq.gz)
+        meryl k=21 memory=32 threads=32 count $i output $OUT_DIR/$NAME\.meryl
 done
 
 # merge all databases
-meryl k=21 memory=32 threads=32 union-sum output $OUT_DIR/3884.meryl $OUT_DIR/$OUT_NAME\*.meryl
+meryl k=21 memory=32 threads=32 union-sum output $OUT_DIR/3884.meryl $OUT_DIR/*.meryl
 
 # get histogram for genomescope
 meryl histogram $OUT_DIR/3884.meryl | sed 's/\t/ /g' > $OUT_DIR/3884.hist
