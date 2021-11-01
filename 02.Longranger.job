@@ -17,16 +17,27 @@
 export PATH=../Software/longranger-2.2.2/:$PATH
 
 ## Only change this: #######################################################
-FQ_DIR="../Elephant_project/TSW/genomic_data/10x"
+10x_DIR="../Elephant_project/TSW/genomic_data/10x"
 NAME="TSW_3884"
-OUT_DIR="../Elephant_project/TSW/intermediates/Longranger"
+LONGR_DIR="../Elephant_project/TSW/intermediates/Longranger"
+TRIM_DIR="../Elephant_project/TSW/intermediates/trimmed"
 ############################################################################
 
 DEINTERLEAVE="../Software/deinterleave_fastq.sh"
 
-mkdir -p $OUT_DIR
-cd $OUT_DIR
-longranger basic --id=$NAME --fastqs=$FQ_DIR --localcores 16
+# Remove gembarcode
+mkdir -p $LONGR_DIR
+cd $LONGR_DIR
+longranger basic --id=$NAME --fastqs=$10x_DIR --localcores 16
 
+# Deinterleave fastq
 cd $NAME/outs
 $DEINTERLEAVE < <(zcat barcoded.fastq.gz) debarcoded.1.fastq.gz debarcoded.2.fastq.gz compress
+
+# Quality trimming
+module load Trim_Galore/0.6.6-GCCcore-9.3.0-Python-3.8.2
+
+mkdir -p $TRIM_DIR
+cd $TRIM_DIR
+trim_galore -o $TRIM_DIR --paired -j 16 LONGR_DIR/$NAME/outs/debarcoded.1.fastq.gz LONGR_DIR/$NAME/outs/debarcoded.2.fastq.gz
+        
