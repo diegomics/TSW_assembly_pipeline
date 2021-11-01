@@ -3,7 +3,7 @@
 #SBATCH -J longranger
 #SBATCH -o ../stdout/longranger.%j.out
 #SBATCH -e ../stderr/longranger.%j.err
-#SBATCH -D ../Elephant_project/TSW/genomic_data/10x/trimmed
+##SBATCH -D 
 
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=..@..
@@ -16,4 +16,17 @@
 
 export PATH=../Software/longranger-2.2.2/:$PATH
 
-longranger basic --id=3884 --fastqs=../Elephant_project/TSW/genomic_data/10x --localcores 16
+## Only change this: #######################################################
+FQ_DIR="../Elephant_project/TSW/genomic_data/10x"
+NAME="TSW_3884"
+OUT_DIR="../Elephant_project/TSW/intermediates/Longranger"
+############################################################################
+
+DEINTERLEAVE="../Software/deinterleave_fastq.sh"
+
+mkdir -p $OUT_DIR
+cd $OUT_DIR
+longranger basic --id=$NAME --fastqs=$FQ_DIR --localcores 16
+
+cd $NAME/outs
+$DEINTERLEAVE < <(zcat barcoded.fastq.gz) debarcoded.1.fastq.gz debarcoded.2.fastq.gz compress
