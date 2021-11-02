@@ -3,7 +3,7 @@
 #SBATCH -J supernova
 #SBATCH -o ../stdout/supernova.%j.out
 #SBATCH -e ../stderr/supernova.%j.err
-#SBATCH -D ../Elephant_project/TSW/intermediates/Supernova
+##SBATCH -D 
 
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=..@..
@@ -16,4 +16,17 @@
 
 export PATH=../Software/supernova-2.1.1/:$PATH
 
-supernova run --id=3884 --fastqs=../Elephant_project/TSW/genomic_data/10x --maxreads='all'
+## Only change this: ############################################
+FQ_DIR="../Elephant_project/TSW/genomic_data/10x "
+OUT_DIR="../Elephant_project/TSW/intermediates/Supernova"
+ID_NAME="3884_TSW"
+ASM_STYLE="pseudohap2"
+#################################################################
+
+mkdir -p $OUT_DIR
+cd $OUT_DIR
+supernova run --id=$ID_NAME --fastqs=$FQ_DIR --maxreads='all'
+
+mkdir -p $OUT_DIR/$ASM_STYLE
+cd $OUT_DIR/$ASM_STYLE
+supernova mkoutput --style=$ASM_STYLE --asmdir=$OUT_DIR/$ID_NAME/outs/assembly --outprefix=$ID_NAME
