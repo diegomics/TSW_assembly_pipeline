@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#SBATCH -J merqury
+#SBATCH -o ../stdout/merqury.%j.out
+#SBATCH -e ../stderr/merqury.%j.err
+##SBATCH -D 
+
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=..@..
+
+#SBATCH --partition=begendiv,main
+#SBATCH --qos=standard
+#SBATCH --cpus-per-task=32
+#SBATCH --mem=32G
+#SBATCH --time=48:00:00
+
+export PATH=../Software/anaconda3/bin:$PATH
+source activate MERQURY_env
+
+
+## Only change this: ############################################
+MERYL_DB="../Elephant_project/TSW/evaluation/meryl/debarcoded_val.meryl"
+ASM1="../Elephant_project/TSW/intermediates/Supernova/pseudohap2/3884.1.fasta"
+ASM2="../Elephant_project/TSW/intermediates/Supernova/pseudohap2/3884.2.fasta"
+OUT_DIR="../Elephant_project/TSW/evaluation/merqury"
+NAME="supernova"
+#################################################################
+
+mkdir -p $OUT_DIR/$NAME
+cd $OUT_DIR/$NAME
+
+## One Assembly
+#$MERQURY/merqury.sh $MERYL_DB $ASM1 $NAME
+
+## Two assemblies (Diploid)
+$MERQURY/merqury.sh $MERYL_DB $ASM1 $ASM2 $NAME
