@@ -1,1 +1,35 @@
+#!/bin/bash
 
+## FULL Installation ##############################################
+##conda create -n BUSCO_env -c conda-forge -c bioconda busco=5.2.2
+###################################################################
+
+#SBATCH -J busco
+#SBATCH -o ../stdout/busco.%j.out
+#SBATCH -e ../stderr/busco.%j.err
+##SBATCH -D 
+
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=..@..
+
+#SBATCH --partition=begendiv,main
+#SBATCH --qos=standard
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=32G
+#SBATCH --time=48:00:00
+
+export PATH=../Software/anaconda3/bin:$PATH
+source activate BUSCO_env
+
+
+##########################################################################
+# Only modify these variables:
+ASM="../Elephant_project/TSW/intermediates/Supernova/pseudohap2/3884.1.fasta"
+NAME=$(basename $ASM .fasta)
+LINEAGE="../busco_db/mammalia_odb10"
+BUSCO_DIR="../Elephant_project/TSW/evaluation/busco"
+##########################################################################
+
+mkdir -p $BUSCO_DIR/$NAME
+cd $BUSCO_DIR/$NAME
+busco -i $ASM -o $NAME -l $LINEAGE -m genome -c 16
